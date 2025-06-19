@@ -18,3 +18,5 @@ make run
 ```
 
 This will create a tmux session with mouse controll enabled. The left side is the chat interface while the right side is the approvals interface. When you send a message that requires tool calling the execution will stall. To approve or reject the tool use type `list` in the approvals interface this will show the approval request for the tool call. Next either type `accept` or `reject` followed by the approval request id (the UUID shown when the `list` command is run). Tab completion is available for autocompleting the approval request ids.
+
+To stop the tmux session click `<Ctrl>-b` and then `: kill-session`

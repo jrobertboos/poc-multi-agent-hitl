@@ -23,7 +23,7 @@ multi-agent-mcp: tool-stack
 quota-mcp: start-session
 	tmux new-window -t $(SESSION_NAME): -n quota-mcp 'cd servers/quota && FASTMCP_PORT=8001 python server.py'
 
-stack: start-session multi-agent quota
+stack: start-session multi-agent-mcp quota-mcp
 	tmux new-window -t $(SESSION_NAME): -n stack '\
 	while ! nc -z localhost 8000; do sleep 1; done && \
 	while ! nc -z localhost 8001; do sleep 1; done && \
