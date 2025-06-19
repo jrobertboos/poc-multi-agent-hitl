@@ -1,0 +1,10 @@
+[project]
+name = "hitl-agent"
+version = "0.1.0"
+description = "Human in the loop agent provider for llama stack"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "llama-stack",
+    "pydantic",
+]

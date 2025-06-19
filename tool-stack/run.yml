@@ -1,0 +1,57 @@
+version: '2'
+image_name: llamastack-poc-multi-agent-hitl-tools
+container_image: null
+
+external_providers_dir: ../providers
+
+distribution_spec:
+  local:
+    services:
+      - agents
+
+apis:
+  - inference
+  - telemetry
+  - agents
+  - vector_io
+  - safety
+  - tool_runtime
+
+providers:
+  agents:
+    - provider_id: meta-reference
+      provider_type: inline::meta-reference
+      config:
+        persistence_store:
+          type: sqlite
+          db_path: ./kvstore.db
+        responses_store:
+          type: sqlite
+          db_path: ./responses.db
+  tool_runtime:
+    - provider_id: model-context-protocol
+      provider_type: remote::model-context-protocol
+      config: {}
+  inference:
+    - provider_id: openai
+      provider_type: remote::openai
+      config:
+        api_key: ${env.OPENAI_API_KEY}
+  telemetry:
+    - provider_id: meta-reference
+      provider_type: inline::meta-reference
+      config:
+        sinks: ['console']
+  safety:
+    - provider_id: quota-limiter
+      provider_type: inline::quota-limiter
+      config: {
+        "db_path": "../quota.txt",
+        "inital_quota": 100,
+      }
+
+models:
+  - model_id: gpt-4-turbo
+    provider_id: openai
+    model_type: llm
+    provider_model_id: gpt-4-turbo

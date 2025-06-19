@@ -1,0 +1,11 @@
+module: hitl_agent
+config_class: hitl_agent.HitlAgentsImplConfig
+pip_packages: []
+api_dependencies: 
+    - inference
+    - safety
+    - vector_io
+    - vector_dbs
+    - tool_runtime
+    - tool_groups
+optional_api_dependencies: []

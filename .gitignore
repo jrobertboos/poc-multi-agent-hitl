@@ -1,0 +1,6 @@
+.DS_store
+__pycache__/
+*.egg-info/
+*.db
+None
+quota.txt

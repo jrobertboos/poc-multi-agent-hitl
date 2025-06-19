@@ -1,0 +1,6 @@
+module: quota_limiter
+config_class: quota_limiter.QuotaLimiterConfig
+pip_packages: []
+api_dependencies: 
+    - inference
+optional_api_dependencies: []
