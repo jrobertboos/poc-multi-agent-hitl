@@ -7,7 +7,8 @@ from pydantic import BaseModel
 
 class HitlAgentsImplConfig(MetaReferenceAgentsImplConfig):
     """Human in the loop agent configuration"""
-
+    hil_endpoint : str
+    
     @classmethod
     def sample_run_config(cls, __distro_dir__: str) -> dict[str, Any]:
         config = super().sample_run_config(__distro_dir__)

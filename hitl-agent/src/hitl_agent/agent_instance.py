@@ -26,8 +26,6 @@ from llama_stack.models.llama.datatypes import (
 
 logger = get_logger(name=__name__, category="agents")
 
-HITL_SERVER="http://localhost:8005"
-
 class HitlChatAgent(ChatAgent):
     def __init__(
             self,
@@ -40,6 +38,7 @@ class HitlChatAgent(ChatAgent):
             vector_io_api: VectorIO,
             persistence_store: KVStore,
             created_at: str,
+            hil_endpoint: str,
             ):
         super().__init__(
                 agent_id,
@@ -52,6 +51,7 @@ class HitlChatAgent(ChatAgent):
                 persistence_store,
                 created_at,
                 )
+        self.hil_endpoint = hil_endpoint
 
     def _post_approval(self, tool_name, agent_id, session_id, status=None):
         payload = {
@@ -63,7 +63,7 @@ class HitlChatAgent(ChatAgent):
 
         payload = {k: v for k, v in payload.items() if v is not None}
 
-        response = requests.post(f"{HITL_SERVER}/approvals", json=payload)
+        response = requests.post(f"{self.hil_endpoint}/approvals", json=payload)
 
         if response.status_code == 200:
             approval = response.json()
@@ -88,7 +88,7 @@ class HitlChatAgent(ChatAgent):
         start_time = time.time()
 
         while time.time() - start_time < timeout:
-            response = requests.get(f"{HITL_SERVER}/approvals/{approval_id}")
+            response = requests.get(f"{self.hil_endpoint}/approvals/{approval_id}")
             if response.status_code == 200:
                 approval = response.json()
                 if approval.get("status") is not None:

@@ -28,6 +28,7 @@ providers:
         responses_store:
           type: sqlite
           db_path: ./responses.db
+        hil_endpoint: "http://localhost:8005/"
   tool_runtime:
     - provider_id: model-context-protocol
       provider_type: remote::model-context-protocol

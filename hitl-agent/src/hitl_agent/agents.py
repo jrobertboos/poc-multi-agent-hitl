@@ -59,4 +59,5 @@ class HitlAgentsImpl(MetaReferenceAgentsImpl):
                 else self.in_memory_store
             ),
             created_at=agent_info.created_at,
+            hil_endpoint=self.config.hil_endpoint
         )
