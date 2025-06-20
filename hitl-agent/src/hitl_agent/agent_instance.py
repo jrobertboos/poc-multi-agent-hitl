@@ -108,11 +108,14 @@ class HitlChatAgent(ChatAgent):
             tool_call: ToolCall,
             ) -> ToolInvocationResult:
         tool_name = tool_call.tool_name
-        registered_tool_names = [tool_def.tool_name for tool_def in self.tool_defs]
+        registered_tool_names = {}
+        for tool in self.tool_defs:
+            registered_tool_names[tool.tool_name] = tool
         if tool_name not in registered_tool_names:
             raise ValueError(
                     f"Tool {tool_name} not found in provided tools, registered tools: {', '.join([str(x) for x in registered_tool_names])}"
                     )
+        
         if isinstance(tool_name, BuiltinTool):
             if tool_name == BuiltinTool.brave_search:
                 tool_name_str = WEB_SEARCH_TOOL
@@ -121,9 +124,17 @@ class HitlChatAgent(ChatAgent):
         else:
             tool_name_str = tool_name
 
-        approval_id = self._post_approval(tool_name, self.agent_id, session_id).get("id")
+        is_destructive = (
+            registered_tool_names[tool_name].annotations.get("destructiveHint", False)
+            if registered_tool_names[tool_name].annotations else False
+        )
+        if is_destructive:
+            approval_id = self._post_approval(tool_name, self.agent_id, session_id).get("id")
 
-        approved = self._wait_for_approval(approval_id).get("status")
+            approved = self._wait_for_approval(approval_id).get("status")
+        else:
+            approved = True
+            
         if approved:
             logger.info(f"executing tool call: {tool_name_str} with args: {tool_call.arguments}")
             result = await self.tool_runtime_api.invoke_tool(

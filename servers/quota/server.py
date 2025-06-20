@@ -8,7 +8,13 @@ def read_quota() -> str:
     with open("../../quota.txt", "r") as f:
         return f.read()
 
-@mcp.tool()
+@mcp.tool(
+    name="set_quota",
+    description="Sets the quota amount",
+    annotations={
+        "destructiveHint": True,
+    }
+)
 def set_quota(amount: int) -> str:
     """Sets the quota amount"""
     with open("../../quota.txt", "w") as f:
